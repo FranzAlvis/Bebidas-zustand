@@ -1,10 +1,18 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import { useAppStore } from "../stores/useAppStore";
 
 export const Header = () => {
     const { pathname } = useLocation();
 
     const isHome = useMemo(() => pathname === "/", [pathname])
+
+    const { fetchCategories, categories } = useAppStore()
+
+
+    useEffect(() => {
+        fetchCategories()
+    }, [])
 
     return (
         <header className={isHome ? "bg-[url('/bg.jpg')] bg-cover bg-no-repeat bg-center" : "bg-slate-800"}>
@@ -41,7 +49,14 @@ export const Header = () => {
                                 </label>
                                 <select name="category" id="category"
                                     className="p-3 w-full rounded-lg focus:outline-none bg-white">
-                                    <option value="">-- Selecciona una categoría --</option>
+                                    <option value="" disabled>-- Selecciona una categoría --</option>
+                                    {
+                                        categories.drinks.map((category) => (
+                                            <option key={category.strCategory} value={category.strCategory}>
+                                                {category.strCategory}
+                                            </option>
+                                        ))
+                                    }
                                 </select>
                             </div>
                             <input type="submit" value="Buscar Recetas"
