@@ -1,18 +1,41 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAppStore } from "../stores/useAppStore";
 
 export const Header = () => {
+    const [searchFilters, setSearchFilters] = useState({
+        ingredient: "",
+        category: ""
+    });
+
     const { pathname } = useLocation();
 
     const isHome = useMemo(() => pathname === "/", [pathname])
 
-    const { fetchCategories, categories } = useAppStore()
+    const { fetchCategories, categories, searchRecipes } = useAppStore()
 
 
     useEffect(() => {
         fetchCategories()
     }, [])
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setSearchFilters({
+            ...searchFilters,
+            [name]: value
+        })
+    }
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (Object.values(searchFilters).includes("")) {
+            return;
+        }
+
+        searchRecipes(searchFilters)
+
+    }
 
     return (
         <header className={isHome ? "bg-[url('/bg.jpg')] bg-cover bg-no-repeat bg-center" : "bg-slate-800"}>
@@ -29,7 +52,7 @@ export const Header = () => {
 
                 {
                     isHome && (
-                        <form action=""
+                        <form onSubmit={handleSubmit}
                             className="md:w-1/2 2xl:w-1/3 bg-orange-400 my-32 p-10 rounded-lg shadow space-y-6"
                         >
                             <div className="space-y-4">
@@ -40,7 +63,9 @@ export const Header = () => {
                                 <input type="text" id="text"
                                     name="ingredient"
                                     className=" p-3 w-full rounded-lg focus:outline-none bg-white"
-                                    placeholder="Nombre o Ingrediente. Ej. Vodka, Tequila" />
+                                    placeholder="Nombre o Ingrediente. Ej. Vodka, Tequila"
+                                    onChange={handleChange}
+                                    value={searchFilters.ingredient} />
                             </div>
                             <div className="space-y-4">
                                 <label htmlFor="category"
@@ -48,7 +73,9 @@ export const Header = () => {
                                     Categoría
                                 </label>
                                 <select name="category" id="category"
-                                    className="p-3 w-full rounded-lg focus:outline-none bg-white">
+                                    className="p-3 w-full rounded-lg focus:outline-none bg-white"
+                                    onChange={handleChange}
+                                    value={searchFilters.category}>
                                     <option value="" disabled>-- Selecciona una categoría --</option>
                                     {
                                         categories.drinks.map((category) => (
