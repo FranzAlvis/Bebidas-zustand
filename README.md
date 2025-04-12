@@ -1,4 +1,4 @@
-# Proyecto React con Zustand, React Router, Zod y Tailwind CSS
+# Proyecto React con Zustand, React Router, Zod y Tailwind CSS --Con Inligencia Artificial--
 
 Este proyecto es una base sólida para construir aplicaciones modernas en React utilizando un conjunto de tecnologías ligeras y eficientes:
 
