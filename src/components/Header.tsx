@@ -12,7 +12,7 @@ export const Header = () => {
 
     const isHome = useMemo(() => pathname === "/", [pathname])
 
-    const { fetchCategories, categories, searchRecipes } = useAppStore()
+    const { fetchCategories, categories, searchRecipes, showNotification } = useAppStore()
 
 
     useEffect(() => {
@@ -30,6 +30,10 @@ export const Header = () => {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (Object.values(searchFilters).includes("")) {
+            showNotification({
+                text: "Todos los campos son obligatorios",
+                error: true
+            })
             return;
         }
 
@@ -47,6 +51,7 @@ export const Header = () => {
                     <nav className="flex gap-4">
                         <NavLink to="/" className={({ isActive }) => isActive ? 'text-orange-500 uppercase font-bold' : 'text-white uppercase font-bold'}>Inicio</NavLink>
                         <NavLink to="/favoritos" className={({ isActive }) => isActive ? 'text-orange-500 uppercase font-bold' : 'text-white uppercase font-bold'}>Favoritos</NavLink>
+                        <NavLink to="/generate" className={({ isActive }) => isActive ? 'text-orange-500 uppercase font-bold' : 'text-white uppercase font-bold'}>Generar con IA</NavLink>
                     </nav>
                 </div>
 
